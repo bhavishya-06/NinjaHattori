@@ -12,6 +12,7 @@ import { NewsScroller } from "@/components/news-scroller"
 import { PriorityList } from "@/components/priority-list"
 import { SupplyOverview } from "@/components/supply-overview"
 import { AlertStatus } from "@/components/alert-status"
+import { SuppliesNeeded } from "@/components/supplies-needed"
 import { AlertTriangle, Droplets, Wind, Flame } from "lucide-react"
 import type { DisasterInfo } from "../app/page";
 
@@ -70,6 +71,7 @@ export function HomeClient({ numberOfDisasters, disasters }: HomeClientProps) {
           <TabsList>
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="map">Map</TabsTrigger>
+            <TabsTrigger value="supplies">Supplies Needed</TabsTrigger>
           </TabsList>
           <TabsContent value="overview" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -134,6 +136,9 @@ export function HomeClient({ numberOfDisasters, disasters }: HomeClientProps) {
                    </CardContent>
                  </Card>
               </div>
+          </TabsContent>
+          <TabsContent value="supplies" className="space-y-4">
+            <SuppliesNeeded disastersWithNeeds={disasters} />
           </TabsContent>
         </Tabs>
       </main>

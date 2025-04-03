@@ -10,6 +10,7 @@ export interface DisasterInfo {
   location: string;
   severity: number; // Numeric severity (e.g., 90, 60, 30)
   title: string; // Add title for news headlines
+  supplies: Supplies; // Add supplies object
 }
 
 // Define interfaces matching the NEW JSON structure
@@ -73,12 +74,14 @@ async function getDisasterData(): Promise<{ count: number; disasters: DisasterIn
         const severityString = disasterDetails.severity?.toLowerCase() || 'unknown';
         const severityValue = severityMap[severityString] || 0;
         const disasterTitle = disasterDetails.title || `${disasterType} event in ${countryName}`; // Use title or generate default
+        const disasterSupplies = disasterDetails.supplies || { food: 0, water: 0, medicine: 0, shelter: 0 }; // Get supplies or default
 
         processedDisasters.push({
           type: disasterType, // e.g., 'hurricane'
           location: countryName, // e.g., 'BI'
           severity: severityValue, // Numeric value (90, 60, 30, 0)
           title: disasterTitle, // Add the title
+          supplies: disasterSupplies, // Add the supplies object
         });
       }
     }
