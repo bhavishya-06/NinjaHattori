@@ -72,10 +72,7 @@ export default function Home() {
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList>
             <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="news">News Feed</TabsTrigger>
             <TabsTrigger value="map">Map</TabsTrigger>
-            <TabsTrigger value="sources">Data Sources</TabsTrigger>
-            <TabsTrigger value="scraping">Scraping Status</TabsTrigger>
           </TabsList>
           <TabsContent value="overview" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -206,28 +203,7 @@ export default function Home() {
               </Card>
             </div>
           </TabsContent>
-          <TabsContent value="sources" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Data Sources</CardTitle>
-                <CardDescription>Active sources and data quality metrics</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <SourcesOverview />
-              </CardContent>
-            </Card>
-          </TabsContent>
-          <TabsContent value="scraping" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Web Scraping Status</CardTitle>
-                <CardDescription>Current scraping jobs and schedules</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ScrapeStatus />
-              </CardContent>
-            </Card>
-          </TabsContent>
+
         </Tabs>
       </main>
     </div>
