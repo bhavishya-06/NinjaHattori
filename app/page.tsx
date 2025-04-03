@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,6 +11,8 @@ import { SupplyOverview } from "@/components/supply-overview"
 import { AlertStatus } from "@/components/alert-status"
 import { ScrapeStatus } from "@/components/scrape-status"
 import { SourcesOverview } from "@/components/sources-overview"
+import { useRouter } from "next/navigation"
+import axios from "axios"
 
 function DashboardIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -33,6 +37,17 @@ function DashboardIcon(props: React.SVGProps<SVGSVGElement>) {
 }
 
 export default function Home() {
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    try {
+      await axios.get('/api/users/logout')
+      router.push('/login')
+    } catch (error) {
+      console.error('Logout failed:', error)
+    }
+  }
+
   return (
     <div className="flex min-h-screen w-full flex-col">
       <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
@@ -41,7 +56,14 @@ export default function Home() {
           <AlertIcon className="h-6 w-6" />
           <span className="text-xl">DisasterResponse</span>
         </Link>
-        <div className="flex-1" />
+        <div className="flex-1 flex justify-end ">
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" className="hover:cursor-pointer transition-all duration-300 hover:bg-red-300 hover:text-gray-900 rounded-md p-2" onClick={handleLogout}>
+              Logout
+            </Button>
+
+          </div>
+        </div>
       </header>
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
