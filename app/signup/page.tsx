@@ -23,8 +23,8 @@ import { useRouter } from 'next/navigation'
 
 // Form validation schema
 const formSchema = z.object({
-  userId: z.string().min(3, {
-    message: "User ID must be at least 3 characters.",
+  username: z.string().min(3, {
+    message: "Username must be at least 3 characters.",
   }),
   email: z.string().email({
     message: "Please enter a valid email address.",
@@ -43,7 +43,7 @@ export default function SignupPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      userId: "",
+      username: "",
       email: "",
       password: "",
     },
@@ -94,12 +94,12 @@ export default function SignupPage() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
-                name="userId"
+                name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>User ID</FormLabel>
+                    <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input placeholder="Choose a unique user ID" {...field} />
+                      <Input placeholder="Choose a username" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

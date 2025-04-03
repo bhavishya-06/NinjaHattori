@@ -23,8 +23,8 @@ import axios from 'axios'
 
 // Form validation schema
 const formSchema = z.object({
-  userId: z.string().min(1, {
-    message: "User ID is required.",
+  email: z.string().email({
+    message: "Please enter a valid email address.",
   }),
   password: z.string().min(1, {
     message: "Password is required.",
@@ -40,7 +40,7 @@ export default function LoginPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      userId: "",
+      email: "",
       password: "",
     },
   })
@@ -83,12 +83,12 @@ export default function LoginPage() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
-                name="userId"
+                name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>User ID</FormLabel>
+                    <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter your user ID" {...field} />
+                      <Input type="email" placeholder="Enter your email" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
