@@ -1,4 +1,5 @@
 import { Suspense } from "react"
+import Link from "next/link"
 import { SuppliesTable } from "@/components/supplies-table"
 import { SuppliesTableSkeleton } from "@/components/supplies-table-skeleton"
 import { AddSupplyForm } from "@/components/add-supply-form"
@@ -8,7 +9,7 @@ import { Package, ShieldAlert } from "lucide-react"
 
 export default function SuppliesPage() {
   return (
-    <div className="container mx-auto py-6 space-y-6">
+    <div className="container mx-auto py-6 space-y-6 p-4 md:p-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Package className="h-6 w-6 text-primary" />
@@ -16,7 +17,7 @@ export default function SuppliesPage() {
         </div>
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <ShieldAlert className="h-4 w-4" />
-          <span>Disaster Management System</span>
+          <Link href="/"><span>Disaster Management System</span></Link>
         </div>
       </div>
 
@@ -55,4 +56,3 @@ export default function SuppliesPage() {
     </div>
   )
 }
-

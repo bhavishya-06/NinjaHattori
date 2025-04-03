@@ -1,17 +1,18 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DisasterMap } from "@/components/disaster-map"
+import { NewsScroller } from "@/components/news-scroller"
 import { PriorityList } from "@/components/priority-list"
 import { SupplyOverview } from "@/components/supply-overview"
-import { NewsScroller } from "@/components/news-scroller"
-import { ScrapeStatus } from "@/components/scrape-status"
 import { SourcesOverview } from "@/components/sources-overview"
-import Link from "next/link"
+import { ScrapeStatus } from "@/components/scrape-status"
+import { Map, Newspaper, Database, RefreshCw } from "lucide-react"
 
 export default function DashboardPage() {
   return (
-    <div className="flex flex-col gap-4 p-4 md:gap-8 md:p-8">
+    <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -138,14 +139,13 @@ export default function DashboardPage() {
               <CardContent>
                 <SupplyOverview />
               </CardContent>
-              <Link href="/supplies">
-                  <CardFooter>
-                    {/* manage supplies button functionality */}
-                      <Button variant="outline" size="sm" className="w-full">
-                        Manage Supplies
-                      </Button>
-                  </CardFooter>
-                </Link>
+              <CardFooter>
+                <Button variant="outline" size="sm" className="w-full" asChild>
+                  <Link href="/supplies">
+                    Manage Supplies
+                  </Link>
+                </Button>
+              </CardFooter>
             </Card>
             <Card className="lg:col-span-4">
               <CardHeader>
@@ -181,7 +181,7 @@ export default function DashboardPage() {
           </Card>
         </TabsContent>
       </Tabs>
-    </div>
+    </main>
   )
 }
 
