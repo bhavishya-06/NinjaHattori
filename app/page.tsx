@@ -7,32 +7,41 @@ import { NewsScroller } from "@/components/news-scroller"
 import { PriorityList } from "@/components/priority-list"
 import { SupplyOverview } from "@/components/supply-overview"
 import { AlertStatus } from "@/components/alert-status"
+import { ScrapeStatus } from "@/components/scrape-status"
+import { SourcesOverview } from "@/components/sources-overview"
+
+function DashboardIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect width="7" height="9" x="3" y="3" rx="1" />
+      <rect width="7" height="5" x="14" y="3" rx="1" />
+      <rect width="7" height="9" x="14" y="12" rx="1" />
+      <rect width="7" height="5" x="3" y="16" rx="1" />
+    </svg>
+  )
+}
 
 export default function Home() {
   return (
     <div className="flex min-h-screen w-full flex-col">
       <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
+        <div className="flex-1" />
         <Link href="/" className="flex items-center gap-2 font-semibold">
           <AlertIcon className="h-6 w-6" />
-          <span>DisasterResponse</span>
+          <span className="text-xl">DisasterResponse</span>
         </Link>
-        <nav className="ml-auto flex gap-2">
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/dashboard">Dashboard</Link>
-          </Button>
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/map">Map</Link>
-          </Button>
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/supplies">Supplies</Link>
-          </Button>
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/reports">Reports</Link>
-          </Button>
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/settings">Settings</Link>
-          </Button>
-        </nav>
+        <div className="flex-1" />
       </header>
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -41,9 +50,10 @@ export default function Home() {
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList>
             <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="map">Map</TabsTrigger>
-            <TabsTrigger value="supplies">Supplies</TabsTrigger>
             <TabsTrigger value="news">News Feed</TabsTrigger>
+            <TabsTrigger value="map">Map</TabsTrigger>
+            <TabsTrigger value="sources">Data Sources</TabsTrigger>
+            <TabsTrigger value="scraping">Scraping Status</TabsTrigger>
           </TabsList>
           <TabsContent value="overview" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -69,11 +79,13 @@ export default function Home() {
                 <CardContent>
                   <SupplyOverview />
                 </CardContent>
+                <Link href="/supplies">
                 <CardFooter>
                   <Button variant="outline" size="sm" className="w-full">
                     Manage Supplies
                   </Button>
                 </CardFooter>
+                </Link>
               </Card>
               <Card className="lg:col-span-1">
                 <CardHeader>
@@ -91,37 +103,107 @@ export default function Home() {
               </Card>
             </div>
           </TabsContent>
-          <TabsContent value="map" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Disaster Map</CardTitle>
-                <CardDescription>Geographic overview of disaster zones and resource allocation</CardDescription>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="aspect-video w-full">
-                  <DisasterMap />
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          <TabsContent value="supplies" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Supply Management</CardTitle>
-                <CardDescription>Inventory and distribution planning</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4 md:grid-cols-2">{/* Supply management content will go here */}</div>
-              </CardContent>
-            </Card>
-          </TabsContent>
           <TabsContent value="news" className="space-y-4">
             <Card>
               <CardHeader>
                 <CardTitle>News Feed</CardTitle>
                 <CardDescription>Latest disaster-related news and social media updates</CardDescription>
               </CardHeader>
-              <CardContent>{/* Expanded news feed will go here */}</CardContent>
+              <CardContent>
+                <NewsScroller />
+              </CardContent>
+            </Card>
+          </TabsContent>
+          <TabsContent value="map" className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2">
+              <Card className="md:col-span-1">
+                <CardHeader>
+                  <CardTitle>Disaster Map</CardTitle>
+                  <CardDescription>Geographic overview of disaster zones in India</CardDescription>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <div className="aspect-square w-full">
+                    <DisasterMap />
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="md:col-span-1">
+                <CardHeader>
+                  <CardTitle>Disaster Locations</CardTitle>
+                  <CardDescription>List of all active disaster zones in India</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium">Flood - Assam</p>
+                        <p className="text-sm text-muted-foreground">Severity: High | Affected: 2.1M</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="inline-flex h-2 w-2 rounded-full bg-red-500" />
+                        <span className="text-sm text-muted-foreground">High Priority</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium">Cyclone - Odisha</p>
+                        <p className="text-sm text-muted-foreground">Category: 3 | Affected: 1.8M</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="inline-flex h-2 w-2 rounded-full bg-red-500" />
+                        <span className="text-sm text-muted-foreground">High Priority</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium">Drought - Maharashtra</p>
+                        <p className="text-sm text-muted-foreground">Severity: Medium | Affected: 1.5M</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="inline-flex h-2 w-2 rounded-full bg-orange-500" />
+                        <span className="text-sm text-muted-foreground">Medium Priority</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium">Landslide - Uttarakhand</p>
+                        <p className="text-sm text-muted-foreground">Area: 50km² | Affected: 0.5M</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="inline-flex h-2 w-2 rounded-full bg-yellow-500" />
+                        <span className="text-sm text-muted-foreground">Low Priority</span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button variant="outline" size="sm" className="w-full">
+                    View All Locations
+                  </Button>
+                </CardFooter>
+              </Card>
+            </div>
+          </TabsContent>
+          <TabsContent value="sources" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Data Sources</CardTitle>
+                <CardDescription>Active sources and data quality metrics</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <SourcesOverview />
+              </CardContent>
+            </Card>
+          </TabsContent>
+          <TabsContent value="scraping" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Web Scraping Status</CardTitle>
+                <CardDescription>Current scraping jobs and schedules</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ScrapeStatus />
+              </CardContent>
             </Card>
           </TabsContent>
         </Tabs>
@@ -130,7 +212,7 @@ export default function Home() {
   )
 }
 
-function AlertIcon(props) {
+function AlertIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
