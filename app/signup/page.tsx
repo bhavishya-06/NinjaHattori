@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Button } from "@/components/ui/button"
+import axios from 'axios'
 import {
   Form,
   FormControl,
@@ -18,6 +19,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useState } from "react"
 import { Loader2 } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast" // Ensure this path is correct
+import { useRouter } from 'next/navigation'
 
 // Form validation schema
 const formSchema = z.object({
@@ -35,6 +37,7 @@ const formSchema = z.object({
 export default function SignupPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
+  const router = useRouter()
 
   // Initialize form
   const form = useForm<z.infer<typeof formSchema>>({
@@ -50,25 +53,33 @@ export default function SignupPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true)
     console.log("Signup data:", values)
+    try {
+      const response = await axios.post('/api/users/signup', values)
 
-    // --- TODO: Implement backend signup logic ---
-    // 1. Call your API endpoint to register the user.
-    // 2. On success from API (indicating user created, email sent):
-    //    toast({ title: "Account Created", description: "Please check your email for verification OTP." });
-    //    // Optionally redirect to an OTP verification page or handle OTP input here.
-    // 3. On error from API:
-    //    toast({ variant: "destructive", title: "Signup Failed", description: "Could not create account. Please try again." });
-    // --- ---
+      // Handle success response
+      console.log("Signup response:", response.data)
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    toast({
-      title: "Account Created (Simulated)",
-      description: "Please check email for OTP (Backend needed).",
-    })
+      // Show success toast
+      toast({
+        title: "Account Created",
+        description: "Please check your email for OTP (Backend needed).",
+      })
+
+      // Optionally, you can redirect to the OTP verification page or another page
+      // For example, router.push('/verify-otp')
+
+    } catch (error) {
+      // Handle error (e.g., if account creation failed)
+      console.error("Signup error:", error)
+      toast({
+        variant: "destructive",
+        title: "Signup Failed",
+        description: "Could not create account. Please try again.",
+      })
+    }
 
     setIsSubmitting(false)
-    // form.reset(); // Consider resetting form or redirecting
+    router.push('/login')
   }
 
   return (

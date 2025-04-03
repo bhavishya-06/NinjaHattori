@@ -19,6 +19,7 @@ import { useState } from "react"
 import { Loader2 } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast" // Ensure this path is correct
 import { useRouter } from 'next/navigation' // Needed for redirection
+import axios from 'axios'
 
 // Form validation schema
 const formSchema = z.object({
@@ -48,25 +49,24 @@ export default function LoginPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true)
     console.log("Login data:", values)
-
-    // --- TODO: Implement backend login logic ---
-    // 1. Call your API endpoint to authenticate the user.
-    // 2. On success from API:
-    //    - Store the session token/user data (e.g., in cookies or state management).
-    //    - Redirect the user: router.push('/');
-    //    toast({ title: "Login Successful" });
-    // 3. On error from API (e.g., invalid credentials):
-    //    toast({ variant: "destructive", title: "Login Failed", description: "Invalid User ID or Password." });
-    // --- ---
-
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500))
-
-    // Example success (replace with actual logic + redirection)
-    toast({
-      title: "Login Successful (Simulated)",
+    
+    try{
+      const response = await axios.post('/api/users/login',values)
+      localStorage.setItem("authToken", response.data.token)
+      // Example success (replace with actual logic + redirection)
+      toast({
+        title: "Login Successful (Simulated)",
+      })
+      router.push('/');
+    }
+    catch(error){
+      console.error("Login error:", error)
+      toast({
+      variant: "destructive",
+      title: "Login Failed",
+      description: "An error occurred. Please try again.",
     })
-    // router.push('/'); // Uncomment and use after successful backend authentication
+    }
 
     setIsSubmitting(false)
   }
