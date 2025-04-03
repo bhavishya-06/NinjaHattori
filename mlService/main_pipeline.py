@@ -2,6 +2,7 @@ import time
 import schedule
 from datetime import datetime
 import os
+import json
 from disaster_scraper import DisasterNewsScraper
 from text_processor import TextProcessor
 from disaster_classifier import DisasterClassifier
@@ -44,6 +45,7 @@ def run_pipeline():
             locations = processor.extract_location(full_text)
             
             processed_data.append({
+                'title': article['title'],
                 'text': processed_text,
                 'disaster_type': disaster_type,
                 'severity': severity,
@@ -77,12 +79,22 @@ def run_pipeline():
                 'infrastructure_damage': 'moderate',  # Default value
                 'accessibility': 'moderate',  # Default value
                 'time_since_disaster': 1,  # Default value
-                'location': disaster.get('location', 'Unknown Location')
+                'location': disaster.get('location', 'Unknown Location'),
+                'title': disaster.get('title', '')
             }
             disaster_list.append(disaster_data)
         
         # Allocate supplies using ReliefSupplyManager
         allocations = supply_manager.allocate_supplies(disaster_list)
+        
+        # Create detailed report organized by country
+        report = supply_manager.format_report(allocations)
+        
+        # Save report to JSON file
+        with open('disaster_allocations_report.json', 'w') as f:
+            json.dump(report, f, indent=4)
+        
+        # Print allocation report
         supply_manager.print_allocation_report(allocations)
         print("Relief allocation completed successfully\n")
         
