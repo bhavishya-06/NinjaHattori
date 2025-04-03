@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import {
   DropdownMenu,
@@ -27,6 +27,7 @@ import {
 import { MoreVertical, Pencil, Trash2, Search, Droplet, Utensils, Pill, Home, Truck, Battery } from "lucide-react"
 import { EditSupplyDialog } from "./edit-supply-dialog"
 import { useToast } from "@/hooks/use-toast"
+import axios from "axios"
 
 // Define the supply categories and their corresponding icons
 const categoryIcons = {
@@ -39,7 +40,7 @@ const categoryIcons = {
 }
 
 export type Supply = {
-  id: string
+  _id: string
   name: string
   category: string
   quantity: number
@@ -50,54 +51,31 @@ export type Supply = {
 }
 
 export function SuppliesTable() {
-  const [supplies, setSupplies] = useState<Supply[]>([
-    {
-      id: "1",
-      name: "Bottled Water",
-      category: "water",
-      quantity: 500,
-      unit: "bottles",
-      location: "Warehouse A",
-      expirationDate: "2025-12-31",
-      lastUpdated: "2023-06-15",
-    },
-    {
-      id: "2",
-      name: "Canned Food",
-      category: "food",
-      quantity: 350,
-      unit: "cans",
-      location: "Warehouse B",
-      expirationDate: "2024-10-15",
-      lastUpdated: "2023-05-20",
-    },
-    {
-      id: "3",
-      name: "First Aid Kits",
-      category: "medical",
-      quantity: 100,
-      unit: "kits",
-      location: "Medical Storage",
-      expirationDate: "2025-03-22",
-      lastUpdated: "2023-06-01",
-    },
-    {
-      id: "4",
-      name: "Emergency Tents",
-      category: "shelter",
-      quantity: 50,
-      unit: "tents",
-      location: "Warehouse C",
-      lastUpdated: "2023-04-10",
-    }
-  ])
-
+  const [supplies, setSupplies] = useState<Supply[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [categoryFilter, setCategoryFilter] = useState("all")
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [selectedSupply, setSelectedSupply] = useState<Supply | null>(null)
   const { toast } = useToast()
+
+  // Fetch supplies from API
+  useEffect(() => {
+    const fetchSupplies = async () => {
+      try {
+        const response = await axios.get('/api/supplies')
+        setSupplies(response.data.supplies)
+      } catch (error) {
+        console.error('Error fetching supplies:', error)
+        toast({
+          title: "Error",
+          description: "Failed to fetch supplies. Please try again.",
+          variant: "destructive",
+        })
+      }
+    }
+    fetchSupplies()
+  }, [])
 
   // Filter supplies based on search term and category
   const filteredSupplies = supplies.filter((supply) => {
@@ -111,11 +89,8 @@ export function SuppliesTable() {
 
   const handleDelete = async (id: string) => {
     try {
-      // In a real app, this would call the server action
-      // await deleteSupply(id)
-
-      // For demo purposes, we'll just update the state
-      setSupplies(supplies.filter((supply) => supply.id !== id))
+      await axios.delete(`/api/supplies/${id}`)
+      setSupplies(supplies.filter((supply) => supply._id !== id))
       setIsDeleteDialogOpen(false)
 
       toast({
@@ -131,14 +106,25 @@ export function SuppliesTable() {
     }
   }
 
-  const handleEdit = (updatedSupply: Supply) => {
-    setSupplies(supplies.map((supply) => (supply.id === updatedSupply.id ? updatedSupply : supply)))
-    setIsEditDialogOpen(false)
+  const handleEdit = async (updatedSupply: Supply) => {
+    try {
+      const response = await axios.put(`/api/supplies/${updatedSupply._id}`, updatedSupply)
+      setSupplies(supplies.map((supply) => 
+        supply._id === updatedSupply._id ? response.data.data : supply
+      ))
+      setIsEditDialogOpen(false)
 
-    toast({
-      title: "Supply updated",
-      description: "The supply information has been updated.",
-    })
+      toast({
+        title: "Supply updated",
+        description: "The supply information has been updated.",
+      })
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update supply. Please try again.",
+        variant: "destructive",
+      })
+    }
   }
 
   const getCategoryIcon = (category: string) => {
@@ -212,7 +198,7 @@ export function SuppliesTable() {
               </TableRow>
             ) : (
               filteredSupplies.map((supply) => (
-                <TableRow key={supply.id}>
+                <TableRow key={supply._id}>
                   <TableCell className="font-medium">{supply.name}</TableCell>
                   <TableCell>
                     <Badge
@@ -283,7 +269,7 @@ export function SuppliesTable() {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-              onClick={() => selectedSupply && handleDelete(selectedSupply.id)}
+              onClick={() => selectedSupply && handleDelete(selectedSupply._id)}
             >
               Delete
             </AlertDialogAction>

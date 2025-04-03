@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Loader2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import axios from "axios"
 
 // Form validation schema
 const formSchema = z.object({
@@ -31,7 +32,7 @@ const formSchema = z.object({
   expirationDate: z.string().optional(),
 })
 
-export function AddSupplyForm() {
+export function AddSupplyForm({ onSupplyAdded }: { onSupplyAdded: () => void }) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
 
@@ -53,10 +54,8 @@ export function AddSupplyForm() {
     setIsSubmitting(true)
 
     try {
-      // In a real app, this would call a server action to add to database
-      // await addSupply(values)
-
-      // For demo purposes, we'll just show a success message
+      const response = await axios.post('/api/supplies', values)
+      
       toast({
         title: "Supply added",
         description: `Added ${values.quantity} ${values.unit} of ${values.name} to inventory.`,
@@ -64,6 +63,9 @@ export function AddSupplyForm() {
 
       // Reset the form
       form.reset()
+      
+      // Notify parent component to refresh supplies list
+      onSupplyAdded()
     } catch (error) {
       toast({
         title: "Error",
