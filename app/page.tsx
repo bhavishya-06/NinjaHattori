@@ -17,21 +17,10 @@ export default function Home() {
           <span>DisasterResponse</span>
         </Link>
         <nav className="ml-auto flex gap-2">
-          <Button variant="ghost" size="sm" asChild>
+          <Button variant="ghost" className="bg-blue-100 rounded-md transition delay-100 hover:bg-blue-200 shadow-sm" size="sm" asChild>
             <Link href="/dashboard">Dashboard</Link>
           </Button>
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/map">Map</Link>
-          </Button>
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/supplies">Supplies</Link>
-          </Button>
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/reports">Reports</Link>
-          </Button>
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/settings">Settings</Link>
-          </Button>
+
         </nav>
       </header>
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
@@ -41,8 +30,6 @@ export default function Home() {
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList>
             <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="map">Map</TabsTrigger>
-            <TabsTrigger value="supplies">Supplies</TabsTrigger>
             <TabsTrigger value="news">News Feed</TabsTrigger>
           </TabsList>
           <TabsContent value="overview" className="space-y-4">
@@ -69,11 +56,14 @@ export default function Home() {
                 <CardContent>
                   <SupplyOverview />
                 </CardContent>
-                <CardFooter>
-                  <Button variant="outline" size="sm" className="w-full">
-                    Manage Supplies
-                  </Button>
-                </CardFooter>
+                <Link href="/supplies">
+                  <CardFooter>
+                    {/* manage supplies button functionality */}
+                      <Button variant="outline" size="sm" className="w-full">
+                        Manage Supplies
+                      </Button>
+                  </CardFooter>
+                </Link>
               </Card>
               <Card className="lg:col-span-1">
                 <CardHeader>
@@ -91,30 +81,7 @@ export default function Home() {
               </Card>
             </div>
           </TabsContent>
-          <TabsContent value="map" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Disaster Map</CardTitle>
-                <CardDescription>Geographic overview of disaster zones and resource allocation</CardDescription>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="aspect-video w-full">
-                  <DisasterMap />
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          <TabsContent value="supplies" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Supply Management</CardTitle>
-                <CardDescription>Inventory and distribution planning</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4 md:grid-cols-2">{/* Supply management content will go here */}</div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+
           <TabsContent value="news" className="space-y-4">
             <Card>
               <CardHeader>

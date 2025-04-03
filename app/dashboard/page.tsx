@@ -1,4 +1,5 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DisasterMap } from "@/components/disaster-map"
 import { PriorityList } from "@/components/priority-list"
@@ -6,6 +7,7 @@ import { SupplyOverview } from "@/components/supply-overview"
 import { NewsScroller } from "@/components/news-scroller"
 import { ScrapeStatus } from "@/components/scrape-status"
 import { SourcesOverview } from "@/components/sources-overview"
+import Link from "next/link"
 
 export default function DashboardPage() {
   return (
@@ -101,7 +103,6 @@ export default function DashboardPage() {
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="sources">Data Sources</TabsTrigger>
           <TabsTrigger value="scraping">Scraping Status</TabsTrigger>
         </TabsList>
@@ -137,6 +138,14 @@ export default function DashboardPage() {
               <CardContent>
                 <SupplyOverview />
               </CardContent>
+              <Link href="/supplies">
+                  <CardFooter>
+                    {/* manage supplies button functionality */}
+                      <Button variant="outline" size="sm" className="w-full">
+                        Manage Supplies
+                      </Button>
+                  </CardFooter>
+                </Link>
             </Card>
             <Card className="lg:col-span-4">
               <CardHeader>
@@ -148,19 +157,6 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
           </div>
-        </TabsContent>
-        <TabsContent value="analytics" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Disaster Analytics</CardTitle>
-              <CardDescription>Trends and patterns in disaster data</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[400px] w-full bg-[url('/placeholder.svg?height=400&width=800')] bg-cover bg-center">
-                {/* Analytics charts would go here */}
-              </div>
-            </CardContent>
-          </Card>
         </TabsContent>
         <TabsContent value="sources" className="space-y-4">
           <Card>
