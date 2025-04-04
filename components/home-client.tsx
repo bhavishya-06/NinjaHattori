@@ -112,26 +112,15 @@ export function HomeClient({ numberOfDisasters, disasters }: HomeClientProps) {
             </div>
           </TabsContent>
           <TabsContent value="map" className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4 md:grid-cols-1">
                 <Card className="md:col-span-1">
                   <CardHeader>
                      <CardTitle>Disaster Map</CardTitle>
-                     <CardDescription>Geographic overview of disaster zones in India</CardDescription>
+                     <CardDescription>Geographic overview of current disaster zones</CardDescription>
                    </CardHeader>
                    <CardContent className="p-0">
-                     <div className="aspect-square w-full">
+                     <div className="aspect-video w-full">
                        <DisasterMap />
-                     </div>
-                   </CardContent>
-                 </Card>
-                 <Card className="md:col-span-1">
-                   <CardHeader>
-                     <CardTitle>Disaster Locations</CardTitle>
-                     <CardDescription>List of all active disaster zones in India</CardDescription>
-                   </CardHeader>
-                   <CardContent>
-                     <div className="space-y-4">
-                       <p className="text-sm text-muted-foreground">Dynamic list is in 'Active Disasters' card.</p>
                      </div>
                    </CardContent>
                  </Card>

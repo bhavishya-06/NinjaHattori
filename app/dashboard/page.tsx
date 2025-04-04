@@ -108,55 +108,17 @@ export default function DashboardPage() {
           <TabsTrigger value="scraping">Scraping Status</TabsTrigger>
         </TabsList>
         <TabsContent value="overview" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="lg:col-span-4">
-              <CardHeader>
-                <CardTitle>Disaster Map</CardTitle>
-                <CardDescription>Geographic overview of current disaster zones</CardDescription>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="aspect-video w-full">
-                  <DisasterMap />
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="lg:col-span-3">
-              <CardHeader>
-                <CardTitle>Priority Disasters</CardTitle>
-                <CardDescription>Ranked by severity and resource needs</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <PriorityList />
-              </CardContent>
-            </Card>
-          </div>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="lg:col-span-3">
-              <CardHeader>
-                <CardTitle>Supply Status</CardTitle>
-                <CardDescription>Current inventory and distribution</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <SupplyOverview />
-              </CardContent>
-              <CardFooter>
-                <Button variant="outline" size="sm" className="w-full" asChild>
-                  <Link href="/supplies">
-                    Manage Supplies
-                  </Link>
-                </Button>
-              </CardFooter>
-            </Card>
-            <Card className="lg:col-span-4">
-              <CardHeader>
-                <CardTitle>Latest Updates</CardTitle>
-                <CardDescription>Recent news and social media reports</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <NewsScroller />
-              </CardContent>
-            </Card>
-          </div>
+          <Card className="w-full">
+            <CardHeader>
+              <CardTitle>Disaster Map</CardTitle>
+              <CardDescription>World overview of current disaster zones</CardDescription>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="aspect-video w-full">
+                <DisasterMap />
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
         <TabsContent value="sources" className="space-y-4">
           <Card>

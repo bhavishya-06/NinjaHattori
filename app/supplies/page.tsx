@@ -6,6 +6,7 @@ import { AddSupplyForm } from "@/components/add-supply-form"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import type { Supply } from "@/components/supplies-table"
+import { Package } from "lucide-react"
 
 export default function SuppliesPage() {
   const [supplies, setSupplies] = useState<Supply[]>([])
@@ -52,8 +53,11 @@ export default function SuppliesPage() {
   }
 
   return (
-    <div className="container mx-auto py-10">
-      <h1 className="text-3xl font-bold mb-8">Supplies Management</h1>
+    <div className="container mx-auto py-10 px-4">
+      <div className="flex items-center gap-2 mb-8">
+        <Package className="h-7 w-7 text-primary" />
+        <h1 className="text-3xl font-bold">Supplies Management</h1>
+      </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         <Card className="col-span-4">
           <CardHeader>

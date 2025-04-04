@@ -1,82 +1,67 @@
 {
-  "timestamp": "2025-04-04 04:54:09",
-  "buffer_percentage": 20,
-  "total_disasters": 5,
-  "countries": {
-      "Myanmar": {
-          "total_disasters": 1,
-          "disasters": {
-              "earthquake": {
-                  "title": "",
-                  "severity": "high",
-                  "supplies": {
-                      "food": 38.4,
-                      "water": 38.4,
-                      "medicine": 4.99,
-                      "shelter": 16.64
-                  }
-              }
-          }
-      },
-      "North Carolina": {
-          "total_disasters": 1,
-          "disasters": {
-              "hurricane": {
-                  "title": "",
-                  "severity": "high",
-                  "supplies": {
-                      "food": 46.45,
-                      "water": 46.45,
-                      "medicine": 3.35,
-                      "shelter": 16.77
-                  }
-              }
-          }
-      },
-      "Pituffik, Greenland": {
-          "total_disasters": 1,
-          "disasters": {
-              "unknown": {
-                  "title": "",
-                  "severity": "high",
-                  "supplies": {
-                      "food": 46.45,
-                      "water": 46.45,
-                      "medicine": 3.35,
-                      "shelter": 16.77
-                  }
-              }
-          }
-      },
-      "Earth": {
-          "total_disasters": 1,
-          "disasters": {
-              "unknown": {
-                  "title": "",
-                  "severity": "high",
-                  "supplies": {
-                      "food": 46.45,
-                      "water": 46.45,
-                      "medicine": 3.35,
-                      "shelter": 16.77
-                  }
-              }
-          }
-      },
-      "Queensland": {
-          "total_disasters": 1,
-          "disasters": {
-              "flood": {
-                  "title": "",
-                  "severity": "high",
-                  "supplies": {
-                      "food": 30.97,
-                      "water": 61.94,
-                      "medicine": 3.35,
-                      "shelter": 16.77
-                  }
-              }
-          }
-      }
-  }
+    "timestamp": "2025-04-04 03:09:00",
+    "buffer_percentage": 20,
+    "total_disasters": 58,
+    "countries": {
+        "BI": {
+            "total_disasters": 1,
+            "disasters": {
+                "hurricane": {
+                    "title": "Major Hurricane Hits BI",
+                    "severity": "high",
+                    "supplies": {
+                        "food": 46.45,
+                        "water": 46.45,
+                        "medicine": 3.35,
+                        "shelter": 16.77
+                    }
+                }
+            }
+        },
+        "Myanmar": {
+            "total_disasters": 1,
+            "disasters": {
+                "earthquake": {
+                    "title": "Powerful Earthquake Strikes Myanmar",
+                    "severity": "high",
+                    "supplies": {
+                        "food": 38.4,
+                        "water": 38.4,
+                        "medicine": 4.99,
+                        "shelter": 16.64
+                    }
+                }
+            }
+        },
+        "California": {
+            "total_disasters": 1,
+            "disasters": {
+                "wildfire": {
+                    "title": "Wildfires Rage Across California",
+                    "severity": "high",
+                    "supplies": {
+                        "food": 38.71,
+                        "water": 54.19,
+                        "medicine": 3.35,
+                        "shelter": 16.77
+                    }
+                }
+            }
+        },
+        "US": {
+            "total_disasters": 1,
+            "disasters": {
+                "flood": {
+                    "title": "Severe Flooding in US",
+                    "severity": "low",
+                    "supplies": {
+                        "food": 30.97,
+                        "water": 61.94,
+                        "medicine": 3.35,
+                        "shelter": 16.77
+                    }
+                }
+            }
+        }
+    }
 }
