@@ -75,17 +75,17 @@ async function getDisasterData(): Promise<{ count: number; disasters: DisasterIn
         const disasterDetails = disastersInCountry[disasterType];
         const severityString = disasterDetails.severity?.toLowerCase() || 'unknown';
         const severityValue = severityMap[severityString] || 0;
-        const disasterTitle = disasterDetails.title || `${disasterType} event in ${countryName}`; // Use title or generate default
-        const disasterSupplies = disasterDetails.supplies || { food: 0, water: 0, medicine: 0, shelter: 0 }; // Get supplies or default
+        const disasterTitle = disasterDetails.title || `${disasterType} event in ${countryName}`;
+        const disasterSupplies = disasterDetails.supplies || { food: 0, water: 0, medicine: 0, shelter: 0 };
 
         processedDisasters.push({
-          _id: `${countryName}-${disasterType}-${Date.now()}`, // Generate a unique ID
-          type: disasterType, // e.g., 'hurricane'
-          location: countryName, // e.g., 'BI'
-          severity: severityValue, // Numeric value (90, 60, 30, 0)
-          title: disasterTitle, // Add the title
-          supplies: disasterSupplies, // Add the supplies object
-          suppliesAllocated: false // Initialize as not allocated
+          _id: `${countryName}-${disasterType}`, // Simplified ID without timestamp
+          type: disasterType,
+          location: countryName,
+          severity: severityValue,
+          title: disasterTitle,
+          supplies: disasterSupplies,
+          suppliesAllocated: false
         });
       }
     }
