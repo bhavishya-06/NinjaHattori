@@ -106,7 +106,7 @@ export function HomeClient({ numberOfDisasters, disasters }: HomeClientProps) {
                   <CardDescription>Recent news and social media reports</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <NewsScroller disasters={disasters} />
+                  <NewsScroller />
                 </CardContent>
               </Card>
             </div>
