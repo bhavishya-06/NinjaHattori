@@ -1,19 +1,23 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { useState } from "react"
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button"
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Badge } from "@/components/ui/badge"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Button } from "@/components/ui/button"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,153 +28,120 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { MoreVertical, Pencil, Trash2, Search, Droplet, Utensils, Pill, Home, Truck, Battery } from "lucide-react"
 import { EditSupplyDialog } from "./edit-supply-dialog"
 import { useToast } from "@/hooks/use-toast"
-import axios from "axios"
+import { 
+  Utensils, 
+  Droplets, 
+  HeartPulse, 
+  Home, 
+  Search, 
+  Pencil, 
+  Trash 
+} from "lucide-react"
 
-// Define the supply categories and their corresponding icons
-const categoryIcons = {
-  water: <Droplet className="h-4 w-4 text-blue-500" />,
-  food: <Utensils className="h-4 w-4 text-orange-500" />,
-  medical: <Pill className="h-4 w-4 text-red-500" />,
-  shelter: <Home className="h-4 w-4 text-green-500" />,
-  transport: <Truck className="h-4 w-4 text-purple-500" />,
-  power: <Battery className="h-4 w-4 text-yellow-500" />,
-}
-
-export type Supply = {
+export interface Supply {
   _id: string
   name: string
   category: string
   quantity: number
   unit: string
   location: string
-  expirationDate?: string
+  expirationDate?: string | null
   lastUpdated: string
 }
 
-export function SuppliesTable() {
-  const [supplies, setSupplies] = useState<Supply[]>([])
+interface SuppliesTableProps {
+  supplies: Supply[]
+  onSupplyUpdated?: () => void
+}
+
+export function SuppliesTable({ supplies, onSupplyUpdated }: SuppliesTableProps) {
   const [searchTerm, setSearchTerm] = useState("")
   const [categoryFilter, setCategoryFilter] = useState("all")
+  const [selectedSupply, setSelectedSupply] = useState<Supply | null>(null)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  const [selectedSupply, setSelectedSupply] = useState<Supply | null>(null)
   const { toast } = useToast()
 
-  // Fetch supplies from API
-  useEffect(() => {
-    const fetchSupplies = async () => {
-      try {
-        const response = await axios.get('/api/supplies')
-        setSupplies(response.data.supplies)
-      } catch (error) {
-        console.error('Error fetching supplies:', error)
-        toast({
-          title: "Error",
-          description: "Failed to fetch supplies. Please try again.",
-          variant: "destructive",
-        })
-      }
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case "food":
+        return <Utensils className="h-4 w-4" />
+      case "water":
+        return <Droplets className="h-4 w-4" />
+      case "medical":
+        return <HeartPulse className="h-4 w-4" />
+      case "shelter":
+        return <Home className="h-4 w-4" />
+      default:
+        return null
     }
-    fetchSupplies()
-  }, [])
+  }
 
-  // Filter supplies based on search term and category
+  const handleDelete = async () => {
+    if (!selectedSupply) return
+
+    try {
+      const response = await fetch(`/api/supplies/${selectedSupply._id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to delete supply')
+      }
+
+      toast({
+        title: "Success",
+        description: "Supply deleted successfully",
+      })
+
+      if (onSupplyUpdated) {
+        onSupplyUpdated()
+      }
+
+      setIsDeleteDialogOpen(false)
+      setSelectedSupply(null)
+    } catch (error) {
+      console.error('Delete error:', error)
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to delete supply",
+        variant: "destructive",
+      })
+    }
+  }
+
   const filteredSupplies = supplies.filter((supply) => {
-    const matchesSearch =
-      supply.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      supply.location.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesSearch = supply.name.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesCategory = categoryFilter === "all" || supply.category === categoryFilter
-
     return matchesSearch && matchesCategory
   })
 
-  const handleDelete = async (id: string) => {
-    try {
-      await axios.delete(`/api/supplies/${id}`)
-      setSupplies(supplies.filter((supply) => supply._id !== id))
-      setIsDeleteDialogOpen(false)
-
-      toast({
-        title: "Supply deleted",
-        description: "The supply has been removed from inventory.",
-      })
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to delete supply. Please try again.",
-        variant: "destructive",
-      })
-    }
-  }
-
-  const handleEdit = async (updatedSupply: Supply) => {
-    try {
-      const response = await axios.put(`/api/supplies/${updatedSupply._id}`, updatedSupply)
-      setSupplies(supplies.map((supply) => 
-        supply._id === updatedSupply._id ? response.data.data : supply
-      ))
-      setIsEditDialogOpen(false)
-
-      toast({
-        title: "Supply updated",
-        description: "The supply information has been updated.",
-      })
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update supply. Please try again.",
-        variant: "destructive",
-      })
-    }
-  }
-
-  const getCategoryIcon = (category: string) => {
-    return categoryIcons[category as keyof typeof categoryIcons] || null
-  }
-
-  const getCategoryBadgeColor = (category: string) => {
-    switch (category) {
-      case "water":
-        return "bg-blue-100 text-blue-800 hover:bg-blue-100"
-      case "food":
-        return "bg-orange-100 text-orange-800 hover:bg-orange-100"
-      case "medical":
-        return "bg-red-100 text-red-800 hover:bg-red-100"
-      case "shelter":
-        return "bg-green-100 text-green-800 hover:bg-green-100"
-      case "transport":
-        return "bg-purple-100 text-purple-800 hover:bg-purple-100"
-      case "power":
-        return "bg-yellow-100 text-yellow-800 hover:bg-yellow-100"
-      default:
-        return ""
-    }
-  }
-
   return (
     <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-        <div className="relative w-full sm:w-64">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+      <div className="flex gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
-            type="search"
             placeholder="Search supplies..."
-            className="pl-8 w-full"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-8"
           />
         </div>
         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="w-full sm:w-[180px]">
+          <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Filter by category" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Categories</SelectItem>
-            <SelectItem value="water">Water</SelectItem>
             <SelectItem value="food">Food</SelectItem>
+            <SelectItem value="water">Water</SelectItem>
             <SelectItem value="medical">Medical</SelectItem>
             <SelectItem value="shelter">Shelter</SelectItem>
           </SelectContent>
@@ -183,107 +154,81 @@ export function SuppliesTable() {
             <TableRow>
               <TableHead>Name</TableHead>
               <TableHead>Category</TableHead>
-              <TableHead className="text-right">Quantity</TableHead>
-              <TableHead className="hidden md:table-cell">Location</TableHead>
-              <TableHead className="hidden md:table-cell">Expiration</TableHead>
+              <TableHead>Quantity</TableHead>
+              <TableHead>Location</TableHead>
+              <TableHead>Expiration</TableHead>
+              <TableHead>Last Updated</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredSupplies.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center py-6 text-muted-foreground">
-                  No supplies found. Try adjusting your search or filter.
+            {filteredSupplies.map((supply) => (
+              <TableRow key={supply._id}>
+                <TableCell>{supply.name}</TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    {getCategoryIcon(supply.category)}
+                    <span className="capitalize">{supply.category}</span>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  {supply.quantity} {supply.unit}
+                </TableCell>
+                <TableCell>{supply.location}</TableCell>
+                <TableCell>{supply.expirationDate || "N/A"}</TableCell>
+                <TableCell>{supply.lastUpdated}</TableCell>
+                <TableCell className="text-right">
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => {
+                        setSelectedSupply(supply)
+                        setIsEditDialogOpen(true)
+                      }}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => {
+                        setSelectedSupply(supply)
+                        setIsDeleteDialogOpen(true)
+                      }}
+                    >
+                      <Trash className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
-            ) : (
-              filteredSupplies.map((supply) => (
-                <TableRow key={supply._id}>
-                  <TableCell className="font-medium">{supply.name}</TableCell>
-                  <TableCell>
-                    <Badge
-                      variant="outline"
-                      className={`flex items-center gap-1 ${getCategoryBadgeColor(supply.category)}`}
-                    >
-                      {getCategoryIcon(supply.category)}
-                      <span className="capitalize">{supply.category}</span>
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {supply.quantity} {supply.unit}
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">{supply.location}</TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    {supply.expirationDate ? new Date(supply.expirationDate).toLocaleDateString() : "N/A"}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoreVertical className="h-4 w-4" />
-                          <span className="sr-only">Open menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          onClick={() => {
-                            setSelectedSupply(supply)
-                            setIsEditDialogOpen(true)
-                          }}
-                        >
-                          <Pencil className="mr-2 h-4 w-4" />
-                          Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          className="text-destructive focus:text-destructive"
-                          onClick={() => {
-                            setSelectedSupply(supply)
-                            setIsDeleteDialogOpen(true)
-                          }}
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
+            ))}
           </TableBody>
         </Table>
       </div>
 
-      {/* Delete Confirmation Dialog */}
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete {selectedSupply?.name} from your inventory. This action cannot be undone.
+              This action cannot be undone. This will permanently delete the supply
+              item from the database.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-              onClick={() => selectedSupply && handleDelete(selectedSupply._id)}
-            >
-              Delete
-            </AlertDialogAction>
+            <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Edit Supply Dialog */}
       {selectedSupply && (
         <EditSupplyDialog
           supply={selectedSupply}
           open={isEditDialogOpen}
           onOpenChange={setIsEditDialogOpen}
-          onSave={handleEdit}
+          onSupplyUpdated={onSupplyUpdated}
         />
       )}
     </div>

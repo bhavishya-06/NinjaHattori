@@ -6,11 +6,13 @@ import { HomeClient } from "@/components/home-client";
 
 // Define the structure expected by the HomeClient component
 export interface DisasterInfo {
+  _id: string;  // Add _id field
   type: string;
   location: string;
   severity: number; // Numeric severity (e.g., 90, 60, 30)
   title: string; // Add title for news headlines
   supplies: Supplies; // Add supplies object
+  suppliesAllocated?: boolean; // Add field to track if supplies were allocated
 }
 
 // Define interfaces matching the NEW JSON structure
@@ -77,11 +79,13 @@ async function getDisasterData(): Promise<{ count: number; disasters: DisasterIn
         const disasterSupplies = disasterDetails.supplies || { food: 0, water: 0, medicine: 0, shelter: 0 }; // Get supplies or default
 
         processedDisasters.push({
+          _id: `${countryName}-${disasterType}-${Date.now()}`, // Generate a unique ID
           type: disasterType, // e.g., 'hurricane'
           location: countryName, // e.g., 'BI'
           severity: severityValue, // Numeric value (90, 60, 30, 0)
           title: disasterTitle, // Add the title
           supplies: disasterSupplies, // Add the supplies object
+          suppliesAllocated: false // Initialize as not allocated
         });
       }
     }

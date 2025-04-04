@@ -7,6 +7,19 @@ connect()
 // This would connect to a database in a real application
 // For now, we'll create a simple API route that returns mock data
 
+// Define the supply item interface
+interface Supply {
+  _id: string;
+  name: string;
+  category: string;
+  quantity: number;
+  unit: string;
+  location: string;
+  expirationDate: string | null;
+  lastUpdated?: string;
+}
+
+// GET /api/supplies
 export async function GET() {
   try {
     const supplies = await Supplies.find({}).sort({ lastUpdated: -1 })
@@ -16,6 +29,7 @@ export async function GET() {
   }
 }
 
+// POST /api/supplies
 export async function POST(request: Request) {
   try {
     const data = await request.json()

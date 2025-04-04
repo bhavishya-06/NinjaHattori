@@ -1,0 +1,74 @@
+[
+  {
+    "_id": "food-1",
+    "name": "Emergency Food Ration",
+    "category": "food",
+    "quantity": 1000,
+    "unit": "units",
+    "location": "Main Warehouse",
+    "expirationDate": "2024-12-31"
+  },
+  {
+    "_id": "food-2",
+    "name": "Canned Goods",
+    "category": "food",
+    "quantity": 500,
+    "unit": "cans",
+    "location": "Secondary Storage",
+    "expirationDate": "2024-10-31"
+  },
+  {
+    "_id": "water-1",
+    "name": "Bottled Water",
+    "category": "water",
+    "quantity": 2000,
+    "unit": "liters",
+    "location": "Main Warehouse",
+    "expirationDate": "2025-12-31"
+  },
+  {
+    "_id": "water-2",
+    "name": "Water Purification Tablets",
+    "category": "water",
+    "quantity": 1000,
+    "unit": "tablets",
+    "location": "Medical Supplies",
+    "expirationDate": "2025-06-30"
+  },
+  {
+    "_id": "medical-1",
+    "name": "First Aid Kits",
+    "category": "medical",
+    "quantity": 500,
+    "unit": "kits",
+    "location": "Medical Supplies",
+    "expirationDate": "2024-08-31"
+  },
+  {
+    "_id": "medical-2",
+    "name": "Bandages",
+    "category": "medical",
+    "quantity": 300,
+    "unit": "rolls",
+    "location": "Medical Supplies",
+    "expirationDate": "2024-09-30"
+  },
+  {
+    "_id": "shelter-1",
+    "name": "Emergency Tents",
+    "category": "shelter",
+    "quantity": 200,
+    "unit": "tents",
+    "location": "Main Warehouse",
+    "expirationDate": null
+  },
+  {
+    "_id": "shelter-2",
+    "name": "Sleeping Bags",
+    "category": "shelter",
+    "quantity": 150,
+    "unit": "bags",
+    "location": "Secondary Storage",
+    "expirationDate": null
+  }
+] 
